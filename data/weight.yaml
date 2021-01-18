@@ -1,9 +1,43 @@
-'2022-10-31':
-  comment: dodanie 1
-  weight: '69'
-'2021-01-18':
-  comment: to jest test
-  weight: '100'
-'2021-01-15':
-  comment: to jest test
-  weight: '101'
+'2019-01-01':
+  comment:
+  weight: '80'
+'2019-02-01':
+  comment:
+  weight: '84'
+'2019-03-01':
+  comment:
+  weight: '80'
+'2019-04-01':
+  comment:
+  weight: '75'
+'2019-05-01':
+  comment:
+  weight: '85'
+'2019-06-01':
+  comment:
+  weight: '80'
+'2019-07-01':
+  comment:
+  weight: '83'
+'2019-08-01':
+  comment:
+  weight: '82'
+'2019-09-01':
+  comment:
+  weight: '86'
+'2019-10-01':
+  comment:
+  weight: '80'
+'2019-11-01':
+  comment:
+  weight: '78'
+'2019-12-01':
+  comment:
+  weight: '80'
+'2020-01-01':
+  comment:
+  weight: '85'
+'2020-02-01':
+  comment:
+  weight: '87'
+

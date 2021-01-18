@@ -1,9 +1,27 @@
-'2020-10-31':
-  comment: dodanie 1
-  height: '189'
-'2021-01-18':
-  comment: to jest test
-  height: '190'
-'2021-01-15':
-  comment: to jest test
-  height: '192'
+'2014-10-31':
+  comment:
+  height: '139'
+'2015-01-18':
+  comment:
+  height: '150'
+'2016-01-19':
+  comment:
+  height: '152'
+'2017-10-31':
+  comment:
+  height: '159'
+'2018-01-18':
+  comment:
+  height: '164'
+'2019-01-19':
+  comment:
+  height: '172'
+  '2020-10-31':
+    comment: dodanie 1
+    height: '179'
+  '2021-01-18':
+    comment: to jest test
+    height: '184'
+  '2021-01-19':
+    comment: to jest test
+    height: '185'

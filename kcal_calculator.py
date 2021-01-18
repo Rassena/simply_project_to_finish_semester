@@ -85,7 +85,12 @@ class kcal_calculator:
             print(user_data)
 
 
+        def exit():
+            window.destroy()
+
         tkinter.Button(window, text="Calculate my kcal", command=calculate).grid(column=0, row=6)
+        tkinter.Button(window, text="exit", command=exit).grid(column=0, row=7)
+
 
         height.insert(0,data_user_y.get('height'))
         weight.insert(0,data_user_y.get('weight'))

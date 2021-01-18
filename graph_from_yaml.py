@@ -42,12 +42,13 @@ class graph_from_yaml:
 
         fig, ax = plt.subplots()
         plt.plot_date(dates_y, values_y, color='green', linewidth=1, marker='o',linestyle='dashed', markerfacecolor='blue', markersize=6)
+        plt.ylabel(data_name)
         #ax.xaxis.set_major_locator(loc)
         ax.xaxis.set_major_formatter(formatter)
         #ax.xaxis.set_tick_params(rotation=30, labelsize=10)
 
         root = tkinter.Tk()
-        root.wm_title()
+        root.wm_title(data_name)
 
         f = Figure(figsize=(5, 4), dpi=100)
 
