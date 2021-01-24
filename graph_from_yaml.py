@@ -1,6 +1,5 @@
 import tkinter
 
-
 import matplotlib.pyplot as plt
 from matplotlib.dates import (YEARLY, DateFormatter, rrulewrapper, RRuleLocator, drange)
 import numpy as np
@@ -28,17 +27,11 @@ class graph_from_yaml:
         values_y =[]
 
         data_from_yaml = yaml_test.get_yaml(data_name)
-        for key, value in data_from_yaml.items():
-            print("{0}: {1}: {2}; {3}".format(key, data_name, value.get(data_name),value.get('comment')))
-            date = datetime.datetime.strptime(key,'%Y-%m-%d').date()
-            print(date)
-            dates_y = np.append(dates_y, date)
-            values_y = np.append(values_y, (float) (value.get(data_name)))
-            print(value.get(data_name))
 
-        dates = drange(date1, date2, delta)
-        s = np.random.rand(len(dates_y))  # make up some random y values
-
+        for key in sorted(data_from_yaml):
+            print(key, data_from_yaml[key].get(data_name))
+            dates_y = np.append(dates_y, key)
+            values_y = np.append(values_y, (float)(data_from_yaml[key].get(data_name)))
 
         fig, ax = plt.subplots()
         plt.plot_date(dates_y, values_y, color='green', linewidth=1, marker='o',linestyle='dashed', markerfacecolor='blue', markersize=6)
