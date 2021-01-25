@@ -28,7 +28,6 @@ class graph_from_yaml:
         if data_from_yaml is not None:
 
             for key in sorted(data_from_yaml):
-                print(key, data_from_yaml[key].get(data_name))
                 dates_y = np.append(dates_y, key)
                 values_y = np.append(values_y, (float)(data_from_yaml[key].get(data_name)))
 

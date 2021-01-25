@@ -87,7 +87,6 @@ class kcal_calculator:
                 }
 
                 yaml_test.user(user_data)
-                print(user_data)
 
                 label_result.config(
                     text='dodano: {2} - {0}: {1}'.format('kcal', result,

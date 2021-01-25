@@ -66,8 +66,8 @@ class interface:
         self.refresh_list(self)
         self.select_graph.current(0)
         self.select_graph.bind("<<ComboboxSelected>>", self.refresh_list)
-        tkinter.Button(window, text="add new Value", command=add_new_val).grid(column=0, row=3)
-        tkinter.Button(window, text="add new graph", command=add_new_group).grid(column=0, row=5)
+        tkinter.Button(window, text="Add new Value", command=add_new_val).grid(column=0, row=3)
+        tkinter.Button(window, text="Add new graph", command=add_new_group).grid(column=0, row=5)
         tkinter.Button(window, text="Show data list", command=show_list).grid(column=0, row=2)
         tkinter.Button(window, text="Show selected graph", command=show_graph_select).grid(column=0, row=1)
         tkinter.Button(window, text="Calculate my kcal", command=kcal_calculator.kcal_calculator).grid(column=0, row=4)
@@ -132,19 +132,21 @@ class interface:
         NoYes.grid(column=2, row=2)
 
     def about(self, event):
-        exitsure = tkinter.Toplevel()
-        areyousure = tkinter.Label(exitsure, text=self.s_about)
-        areyousure.grid(column=0, row=0, columnspan=3, rowspan=3)
+        windowAbout = tkinter.Toplevel()
+        windowAbout.title('About')
+        labelAbout = tkinter.Label(windowAbout, text=self.s_about)
+        labelAbout.grid(column=0, row=0, columnspan=3, rowspan=3)
 
-        ok = tkinter.Button(exitsure, text="Ok", command=exitsure.destroy)
+        ok = tkinter.Button(windowAbout, text="Ok", command=windowAbout.destroy)
         ok.grid(column=1, row=10)
 
     def help(self, event):
-        exitsure = tkinter.Toplevel()
-        areyousure = tkinter.Label(exitsure, text=self.s_help)
-        areyousure.grid(column=0, row=0, columnspan=3, rowspan=3)
+        windowHelp = tkinter.Toplevel()
+        windowHelp.title('Help')
+        labelHelp = tkinter.Label(windowHelp, text=self.s_help)
+        labelHelp.grid(column=0, row=0, columnspan=3, rowspan=3)
 
-        ok = tkinter.Button(exitsure, text="Ok", command=exitsure.destroy)
+        ok = tkinter.Button(windowHelp, text="Ok", command=windowHelp.destroy)
         ok.grid(column=1, row=10)
 
 
@@ -201,7 +203,6 @@ class interface:
             my_list.grid(column=0, row=0)
 
             for key in sorted(data_from_yaml):
-                print(key, data_from_yaml[key].get(self.select_graph.get()), data_from_yaml[key].get('comment'))
                 my_list.insert(tkinter.END,"{0}: {1}: {2}; {3}".format(key, self.select_graph.get(),
                                                            data_from_yaml[key].get(self.select_graph.get()),
                                                            data_from_yaml[key].get('comment')))

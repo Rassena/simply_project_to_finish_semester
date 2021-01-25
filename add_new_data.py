@@ -112,7 +112,7 @@ class add_new_data:
             NoYes.grid(column=2, row=2)
 
 
-        tkinter.Button(window_add, text="add data", command=add_to_data).grid(column=0, row=6)
+        tkinter.Button(window_add, text="Add data", command=add_to_data).grid(column=0, row=6)
         tkinter.Button(window_add, text="exit", command=exit, fg="red").grid(column=0, row=7)
 
 
