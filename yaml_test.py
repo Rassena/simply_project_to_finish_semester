@@ -1,13 +1,13 @@
 import os
 import yaml
 
-
+#Funkcja tworząca i dodająca nową wartość do danej grupy danech
 def write(new_yaml_data_dict,data_name):
 
     if not os.path.isfile("data/{0}.yaml".format(data_name)):
 
         with open("data/{0}.yaml".format(data_name), "a") as fo:
-            fo.write("---\n")
+            fo.write("")
 
     sdump = yaml.dump(
                 new_yaml_data_dict
@@ -16,36 +16,44 @@ def write(new_yaml_data_dict,data_name):
     with open("data/{0}.yaml".format(data_name), "a") as fo:
         fo.write(sdump)
 
-
+#Nadpisanie danych użytkownika
 def user(user_data):
     with open("user.yaml", "w") as fo:
         fo.write(yaml.dump(user_data))
 
-
+#zwrócenie danych o użytkowniku
 def get_user():
+    if not os.path.isfile("user.yaml"):
+
+        with open("user.yaml", "a") as fo:
+            fo.write("")
+
     with open("user.yaml", "r") as fo:
         documents = yaml.full_load(fo)
         return documents
 
+#Sprawdzenie i stworzenie pliku zawierającego dane o użytkowniku
+def is_user():
+    isUser = False
+    if not os.path.isfile("user.yaml"):
+        with open("user.yaml", "a") as fo:
+            fo.write("")
+    else:
+        isUser =True
+    return isUser
 
 
-def print_yaml(data_name):
-
-    with open(r'data/{0}.yaml'.format(data_name)) as file:
-        documents = yaml.full_load(file)
-
-        for item, doc in documents.items():
-            print(item, " - ", data_name, " ",  doc.get(data_name))
-
-def get_yaml_sorted(data_name):
-
-    with open(r'data/{0}.yaml'.format(data_name)) as file:
-        documents = yaml.full_load(file)
-        sort_file = yaml.dump(documents, sort_keys=True)
-        print(sort_file)
-
+#zwrócenie danych z wybranej grupy
 def get_yaml(data_name):
 
     with open(r'data/{0}.yaml'.format(data_name)) as file:
         documents = yaml.full_load(file)
     return documents
+
+#Sprawdzenie i stworzenie folderu z pierwszą grupą danych
+def ensure_dir(file_path):
+    directory = os.path.dirname(file_path)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+        with open("data/{0}.yaml".format('weight'), "a") as fo:
+            fo.write("")

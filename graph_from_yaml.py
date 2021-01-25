@@ -15,9 +15,6 @@ class graph_from_yaml:
 
     def __init__(self,data_name):
 
-
-
-        rule = rrulewrapper(YEARLY, byeaster=1, interval=1)
         formatter = DateFormatter('%Y-%m-%d')
 
         dates_y = []
@@ -25,6 +22,7 @@ class graph_from_yaml:
 
         data_from_yaml = yaml_test.get_yaml(data_name)
 
+        #Sprawdzenie czy są jakieś wartości w danej grupie i stworzenie wykresu
         if data_from_yaml is not None:
 
             for key in sorted(data_from_yaml):
@@ -49,6 +47,7 @@ class graph_from_yaml:
 
             fig.autofmt_xdate()
 
+        #przypadek gdy grupa nie ma żadnych wartości
         else:
             window_s = tkinter.Tk()
             window_s.title(data_name)

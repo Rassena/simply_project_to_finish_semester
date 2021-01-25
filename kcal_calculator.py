@@ -24,6 +24,8 @@ class kcal_calculator:
 
     def __init__(self):
 
+
+        #Obliczanie i wypisywanie wartości BMR w zaelżności od aktualnie wybranych parametrów
         def calculate(event):
 
             switch_activity = {0: 1.2, 1: 1.375, 2: 1.55, 3: 1.725, 4: 1.9}
@@ -41,6 +43,7 @@ class kcal_calculator:
             label_result.config(text='{:.2f} kcal/day'.format(result))
 
 
+        #Okno komunikat upewniająca się o decyzji co do zamknięcia kalkulatora
         def exit():
             exitsure = tkinter.Toplevel()
 
@@ -54,7 +57,7 @@ class kcal_calculator:
             NoYes = tkinter.Button(exitsure, text="No", command=exitsure.destroy)
             NoYes.grid(column=2, row=2)
 
-
+        # Obliczanie i zapisuje do grupy 'spalone' kalorie wg aktualnie wybranych parametrów
         def add():
 
             newDate = date.today()
@@ -89,7 +92,7 @@ class kcal_calculator:
                 yaml_test.user(user_data)
 
                 label_result.config(
-                    text='dodano: {2} - {0}: {1}'.format('kcal', result,
+                    text='Set: {2} - {0}: {1}'.format('kcal', result,
                                                                        date(int(year.get()), int(month.get()),
                                                                             int(day.get()))))
                 new_yaml_data_dict = {
@@ -100,12 +103,16 @@ class kcal_calculator:
                 }
                 write(new_yaml_data_dict, 'kcal')
 
+
+        #-------------------------------------------------------------------------
+        #poniżej znajduje się tworzenie GUI
+
+
         window = tkinter.Tk()
         window.title("Daily kcal calculator BMR")
 
-        data_user_y = yaml_test.get_user()
-
         today = date.today()
+
 
         tkinter.Label(window, text="date [Y/M/D]:").grid(column=0, row=0)
 
@@ -139,10 +146,7 @@ class kcal_calculator:
 
         tkinter.Label(window,text="height (cm):").grid(column=0, row=1)
 
-        """
-        height = tkinter.Entry(window, width=40)
-        height.grid(column=1, row=0)
-        """
+
 
         cm = []
         for i in range(100, 251):
@@ -153,11 +157,6 @@ class kcal_calculator:
         height.current(0)
         height.bind("<<ComboboxSelected>>", calculate)
 
-
-        """
-        weight = tkinter.Entry(window, width=20)
-        weight.grid(column=1, row=1)
-        """
 
         tkinter.Label(window, text="weight (kg):").grid(column=0, row=2)
         kg = []
@@ -177,10 +176,6 @@ class kcal_calculator:
         weight2.current(0)
         weight2.bind("<<ComboboxSelected>>", calculate)
 
-        """
-        age = tkinter.Entry(window, width=40)
-        age.grid(column=1, row=2)
-        """
 
         tkinter.Label(window, text="age (years):").grid(column=0, row=3)
         ages = []
@@ -218,6 +213,26 @@ class kcal_calculator:
         tkinter.Button(window, text="Save and add", command=add).grid(column=0, row=6)
         tkinter.Button(window, text="exit", command=exit, fg="red").grid(column=0, row=7)
 
+
+        # powyżej znajduje się tworzenie GUI
+        # -------------------------------------------------------------------------
+
+
+        #sprawdzenie czy istnieją dane o żytkowniku
+        if yaml_test.is_user() is False:
+            user_data = {
+                'height': int(height.get()),
+                'weight': int(weight.get()),
+                'age': int(age.get()),
+                'activity': int(activity.current()),
+                'sex': int(sex.current()),
+            }
+            yaml_test.user(user_data)
+
+
+
+        #Ustawienie startowych wartości na dane użytkownika
+        data_user_y = yaml_test.get_user()
 
         height.set(int(data_user_y.get('height')))
         weight.set(int(data_user_y.get('weight')//1))

@@ -17,6 +17,9 @@ class add_new_data:
             return result
 
 
+        #---------------------------------
+        #Gui poniżej
+
         window_add = tkinter.Tk()
         window_add.title("add {0} ".format(data_name))
 
@@ -63,6 +66,11 @@ class add_new_data:
         label_result = tkinter.Label(window_add, text="")
         label_result.grid(column=1, row=6,columnspan=4,rowspan=2)
 
+        # Gui powyżej
+         #---------------------------------
+
+
+        #Sprawdzenie wartości i dodanie ich do bazy
         def add_to_data():
 
 
@@ -78,7 +86,7 @@ class add_new_data:
 
                 if(correctDate):
                     label_result.config(
-                            text='dodano: {3} - {0}: {1}, comment: {2}'.format(data_name, value.get(), comment.get(),
+                            text='Set: {3} - {0}: {1}, comment: {2}'.format(data_name, value.get(), comment.get(),
                                                                                date(int(year.get()), int(month.get()),
                                                                                     int(day.get()))))
                     new_yaml_data_dict = {
@@ -94,10 +102,7 @@ class add_new_data:
             else:
                 label_result.config(text='Value is uncorrect')
 
-
-
-
-
+        #okno upewniające się co do zamknięcia okna dodania wartosci
         def exit():
             exitsure = tkinter.Toplevel()
 
@@ -112,6 +117,7 @@ class add_new_data:
             NoYes.grid(column=2, row=2)
 
 
+        #GUI
         tkinter.Button(window_add, text="Add data", command=add_to_data).grid(column=0, row=6)
         tkinter.Button(window_add, text="exit", command=exit, fg="red").grid(column=0, row=7)
 

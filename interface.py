@@ -6,7 +6,6 @@ import tkinter
 import kcal_calculator
 import add_new_data
 from tkinter import ttk
-from tkinter import *
 
 import yaml_test
 import graph_from_yaml
@@ -60,6 +59,7 @@ class interface:
         def exit():
             self.exit(self)
 
+        #Tworzenie GUI
 
         self.select_graph = ttk.Combobox(window, state="readonly")
         self.select_graph.grid(column=0, row=0)
@@ -67,22 +67,22 @@ class interface:
         self.select_graph.current(0)
         self.select_graph.bind("<<ComboboxSelected>>", self.refresh_list)
         tkinter.Button(window, text="Add new Value", command=add_new_val).grid(column=0, row=3)
-        tkinter.Button(window, text="Add new graph", command=add_new_group).grid(column=0, row=5)
+        tkinter.Button(window, text="Add new group", command=add_new_group).grid(column=0, row=5)
         tkinter.Button(window, text="Show data list", command=show_list).grid(column=0, row=2)
         tkinter.Button(window, text="Show selected graph", command=show_graph_select).grid(column=0, row=1)
         tkinter.Button(window, text="Calculate my kcal", command=kcal_calculator.kcal_calculator).grid(column=0, row=4)
         tkinter.Button(window, text="exit", command=exit, fg="red").grid(column=0, row=6)
 
         self.select_graph.config(value=self.arr)
-        menubar = Menu(window)
-        filemenu = Menu(menubar, tearoff=0)
+        menubar = tkinter.Menu(window)
+        filemenu = tkinter.Menu(menubar, tearoff=0)
         filemenu.add_command(label="New Group", command=add_new_group,accelerator="Ctrl+N")
 
         filemenu.add_separator()
 
         filemenu.add_command(label="Exit", command=exit,accelerator="Ctrl+Q")
         menubar.add_cascade(label="File", menu=filemenu)
-        editmenu = Menu(menubar, tearoff=0)
+        editmenu = tkinter.Menu(menubar, tearoff=0)
 
 
         editmenu.add_command(label="Open graph", command=show_graph_select,accelerator="Ctrl+G")
@@ -90,7 +90,7 @@ class interface:
         editmenu.add_command(label="Add value", command=add_new_val,accelerator="Ctrl+V")
 
         menubar.add_cascade(label="Edit", menu=editmenu)
-        helpmenu = Menu(menubar, tearoff=0)
+        helpmenu = tkinter.Menu(menubar, tearoff=0)
         helpmenu.add_command(label="About...", command=about,accelerator="Ctrl+A")
         helpmenu.add_command(label="Help", command=help,accelerator="Ctrl+H")
         menubar.add_cascade(label="Help", menu=helpmenu)
@@ -104,9 +104,6 @@ class interface:
         window.bind('<Control-g>', self.show_graph_select)
         window.bind('<Control-h>', self.help)
 
-
-
-
         window.mainloop()
 
 
@@ -118,7 +115,7 @@ class interface:
     """
     commands for shortcuts and other
     """
-
+    #Upewnienie się co do wyjscia z aktualnego okna
     def exit(self, event):
         exitsure = tkinter.Toplevel()
 
@@ -131,6 +128,7 @@ class interface:
         NoYes = tkinter.Button(exitsure, text="No", command=exitsure.destroy)
         NoYes.grid(column=2, row=2)
 
+    #Wyswietlenie okna zawierającego informacje o programie
     def about(self, event):
         windowAbout = tkinter.Toplevel()
         windowAbout.title('About')
@@ -140,6 +138,7 @@ class interface:
         ok = tkinter.Button(windowAbout, text="Ok", command=windowAbout.destroy)
         ok.grid(column=1, row=10)
 
+    #Wyświetlenie podstawowych informacji o danych funkcjach
     def help(self, event):
         windowHelp = tkinter.Toplevel()
         windowHelp.title('Help')
@@ -149,10 +148,11 @@ class interface:
         ok = tkinter.Button(windowHelp, text="Ok", command=windowHelp.destroy)
         ok.grid(column=1, row=10)
 
-
+    #Wywołanie funcji dodającej nową wartość do danej grupy danych
     def add_new_val(self, event):
         add_new_data.add_new_data(self.select_graph.get())
 
+    #Funkcja dodająca nowe grupy
     def add_new_group(self, event):
         def new_group():
             if not os.path.isfile("data/{0}.yaml".format(value.get())):
@@ -160,12 +160,12 @@ class interface:
                     fo.write("---\n")
                 for i in range(len(self.arr)):
                     self.arr[i] = self.arr[i].split('.')[0]
-                self.updtcblist()
                 self.refresh_list(self)
                 label_result.config(text='Added {0}'.format(value.get()))
             else:
                 label_result.config(text='{0} already exist'.format(value.get()))
 
+        # Upewnienie się co do wyjscia z dodawania noych grup
         def exit_add_group():
             exitsure = tkinter.Toplevel()
 
@@ -179,6 +179,7 @@ class interface:
             NoYes = tkinter.Button(exitsure, text="No", command=exitsure.destroy)
             NoYes.grid(column=2, row=2)
 
+        #GUI do okna do dodawania nowych grup
         window_a = tkinter.Tk()
         window_a.title('New group')
         tkinter.Label(window_a, text="Name of new group").grid(column=0, row=0)
@@ -191,6 +192,7 @@ class interface:
         label_result = tkinter.Label(window_a, text="")
         label_result.grid(column=1, row=1)
 
+    #Wyświetlenie zapisanych danych za pomocą listy w nowym oknie
     def show_list(self, event):
 
         window_s = tkinter.Tk()
@@ -198,6 +200,7 @@ class interface:
 
         data_from_yaml = yaml_test.get_yaml(self.select_graph.get())
 
+        #Upewnienie się czy dana grupa nie jest pusta
         if data_from_yaml is not None:
             my_list = tkinter.Listbox(window_s)
             my_list.grid(column=0, row=0)
@@ -206,13 +209,7 @@ class interface:
                 my_list.insert(tkinter.END,"{0}: {1}: {2}; {3}".format(key, self.select_graph.get(),
                                                            data_from_yaml[key].get(self.select_graph.get()),
                                                            data_from_yaml[key].get('comment')))
-            """
-            for key, value in data_from_yaml.items():
-                my_list.insert(tkinter.END,
-                               "{0}: {1}: {2}; {3}".format(key, self.select_graph.get(), value.get(self.select_graph.get()),
-                                                           value.get('comment')))
 
-            """
             my_list.config(width=100)
 
         else:
@@ -222,21 +219,15 @@ class interface:
         tkinter.Button(window_s, text="exit", command=window_s.destroy, fg="red").grid(column=0, row=1)
         window_s.mainloop()
 
-    def updtcblist(self):
-        arr = os.listdir("data/")
-        for i in range(len(arr)):
-            arr[i] = arr[i].split('.')[0]
-        self.select_graph.configure(value=self.arr)
-
+    #Wyświetlenie zapisanych danych za pomocą wykresu w nowym oknie
     def show_graph_select(self, event):
         graph_from_yaml.graph_from_yaml(self.select_graph.get())
 
-        def donothing(self, event):
-            filewin = Toplevel(self)
-            button = Button(filewin, text="Do nothing button")
-            button.pack()
 
+    #Odświeżanie listy aktualnie posiadanych grup danych
     def refresh_list(self,event):
+
+        yaml_test.ensure_dir("data/")
         self.arr = os.listdir("data/")
         for i in range(len(self.arr)):
             self.arr[i] = self.arr[i].split('.')[0]
