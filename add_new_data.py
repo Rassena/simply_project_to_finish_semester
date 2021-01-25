@@ -105,6 +105,7 @@ class add_new_data:
         #okno upewniające się co do zamknięcia okna dodania wartosci
         def exit():
             exitsure = tkinter.Toplevel()
+            exitsure.title("Exit")
 
             areyousure = tkinter.Label(exitsure, text="Are you sure you want to exit?")
             areyousure.grid(column=0, row=0, columnspan=4)

@@ -5,6 +5,7 @@ import os
 import tkinter
 import kcal_calculator
 import add_new_data
+import sys
 from tkinter import ttk
 
 import yaml_test
@@ -30,6 +31,7 @@ class interface:
 
     arr = None
     select_graph =None
+    status = None
 
     def __init__(self):
         window = tkinter.Tk()
@@ -63,9 +65,14 @@ class interface:
 
         self.select_graph = ttk.Combobox(window, state="readonly")
         self.select_graph.grid(column=0, row=0)
+        status_frame = tkinter.Frame(window)
+        self.status = tkinter.Label(status_frame)
+        self.status.pack(fill="both", expand=True)
         self.refresh_list(self)
         self.select_graph.current(0)
+        status_frame.grid(row=10, column=0, columnspan=2, sticky="ew")
         self.select_graph.bind("<<ComboboxSelected>>", self.refresh_list)
+        self.status.config(text="current selected: {}".format(self.select_graph.get()))
         tkinter.Button(window, text="Add new Value", command=add_new_val).grid(column=0, row=3)
         tkinter.Button(window, text="Add new group", command=add_new_group).grid(column=0, row=5)
         tkinter.Button(window, text="Show data list", command=show_list).grid(column=0, row=2)
@@ -104,6 +111,8 @@ class interface:
         window.bind('<Control-g>', self.show_graph_select)
         window.bind('<Control-h>', self.help)
 
+
+
         window.mainloop()
 
 
@@ -117,12 +126,12 @@ class interface:
     """
     #Upewnienie się co do wyjscia z aktualnego okna
     def exit(self, event):
-        exitsure = tkinter.Toplevel()
+        exitsure = tkinter.Tk()
 
         areyousure = tkinter.Label(exitsure, text="Are you sure you want to exit?")
         areyousure.grid(column=0, row=0, columnspan=4)
 
-        ExitYes = tkinter.Button(exitsure, text="Yes", fg="red", command=quit)
+        ExitYes = tkinter.Button(exitsure, text="Yes", fg="red",command=sys.exit)
         ExitYes.grid(column=0, row=2)
 
         NoYes = tkinter.Button(exitsure, text="No", command=exitsure.destroy)
@@ -216,6 +225,7 @@ class interface:
             label_result = tkinter.Label(window_s, text="No data to show")
             label_result.grid(column=0, row=0)
 
+
         tkinter.Button(window_s, text="exit", command=window_s.destroy, fg="red").grid(column=0, row=1)
         window_s.mainloop()
 
@@ -232,3 +242,4 @@ class interface:
         for i in range(len(self.arr)):
             self.arr[i] = self.arr[i].split('.')[0]
         self.select_graph.config(value=self.arr)
+        self.status.config(text="current selected: {}".format(self.select_graph.get()))
