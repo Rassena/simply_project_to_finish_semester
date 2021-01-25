@@ -23,16 +23,18 @@ class interface:
             "Program zapisuje dane za każdą dodaną nową wartością. Zagrożenie utraty danych jest prawdopodobne jedynie podczas zawieszenia się \n " \
             "prorgramu/systemu podczas zapisywynia (dodania) nowej wartości."
 
+    s_help = "Show elected graph: Otwiera interakcyjny wykres wybranej grupy danych w combobox. \n\n" \
+             "Show data list: Wypisuje dane wraz z komentarzami wybranej grupy danych w combobox. \n\n" \
+             "Add new Value: Otwiera nowe okno, gdzie jest mozliwość dodania nowej wartości do danej grupy danych. \n\n" \
+             "Calculate my kcal: Otwiera kalkulator który umożliwia obliczanie BMI i BMR, a także ma możliwość zapisania 'spalonych' kalorii danego wybranego dnia. \n\n" \
+             "Add new group: daje możliwość utworzenia nowej grupy danych do śledzenia i zapisywania przez użytkownika." \
+
     arr = None
     select_graph =None
 
     def __init__(self):
-        self.arr = os.listdir("data/")
         window = tkinter.Tk()
         window.title("Graphs")
-
-        for i in range(len(self.arr)):
-            self.arr[i] = self.arr[i].split('.')[0]
 
         def add_new_val():
             self.add_new_val(self)
@@ -52,9 +54,18 @@ class interface:
         def about():
             self.about(self)
 
-        self.select_graph = ttk.Combobox(window, state="readonly", values=self.arr)
+        def help():
+            self.help(self)
+
+        def exit():
+            self.exit(self)
+
+
+        self.select_graph = ttk.Combobox(window, state="readonly")
         self.select_graph.grid(column=0, row=0)
+        self.refresh_list(self)
         self.select_graph.current(0)
+        self.select_graph.bind("<<ComboboxSelected>>", self.refresh_list)
         tkinter.Button(window, text="add new Value", command=add_new_val).grid(column=0, row=3)
         tkinter.Button(window, text="add new graph", command=add_new_group).grid(column=0, row=5)
         tkinter.Button(window, text="Show data list", command=show_list).grid(column=0, row=2)
@@ -62,6 +73,7 @@ class interface:
         tkinter.Button(window, text="Calculate my kcal", command=kcal_calculator.kcal_calculator).grid(column=0, row=4)
         tkinter.Button(window, text="exit", command=exit, fg="red").grid(column=0, row=6)
 
+        self.select_graph.config(value=self.arr)
         menubar = Menu(window)
         filemenu = Menu(menubar, tearoff=0)
         filemenu.add_command(label="New Group", command=add_new_group,accelerator="Ctrl+N")
@@ -75,20 +87,23 @@ class interface:
 
         editmenu.add_command(label="Open graph", command=show_graph_select,accelerator="Ctrl+G")
         editmenu.add_command(label="Open list", command=show_list,accelerator="Ctrl+L")
-        editmenu.add_command(label="Add", command=add_new_val,accelerator="Ctrl+A")
+        editmenu.add_command(label="Add value", command=add_new_val,accelerator="Ctrl+V")
 
         menubar.add_cascade(label="Edit", menu=editmenu)
         helpmenu = Menu(menubar, tearoff=0)
-        helpmenu.add_command(label="About...", command=about,accelerator="Ctrl+H")
+        helpmenu.add_command(label="About...", command=about,accelerator="Ctrl+A")
+        helpmenu.add_command(label="Help", command=help,accelerator="Ctrl+H")
         menubar.add_cascade(label="Help", menu=helpmenu)
 
         window.config(menu=menubar)
         window.bind('<Control-q>',self.exit)
         window.bind('<Control-n>',self.add_new_group)
-        window.bind('<Control-h>',self.about)
+        window.bind('<Control-a>',self.about)
         window.bind('<Control-l>', self.show_list)
-        window.bind('<Control-a>', self.add_new_val)
+        window.bind('<Control-v>', self.add_new_val)
         window.bind('<Control-g>', self.show_graph_select)
+        window.bind('<Control-h>', self.help)
+
 
 
 
@@ -124,6 +139,14 @@ class interface:
         ok = tkinter.Button(exitsure, text="Ok", command=exitsure.destroy)
         ok.grid(column=1, row=10)
 
+    def help(self, event):
+        exitsure = tkinter.Toplevel()
+        areyousure = tkinter.Label(exitsure, text=self.s_help)
+        areyousure.grid(column=0, row=0, columnspan=3, rowspan=3)
+
+        ok = tkinter.Button(exitsure, text="Ok", command=exitsure.destroy)
+        ok.grid(column=1, row=10)
+
 
     def add_new_val(self, event):
         add_new_data.add_new_data(self.select_graph.get())
@@ -136,7 +159,8 @@ class interface:
                 for i in range(len(self.arr)):
                     self.arr[i] = self.arr[i].split('.')[0]
                 self.updtcblist()
-                exit_add_group()
+                self.refresh_list(self)
+                label_result.config(text='Added {0}'.format(value.get()))
             else:
                 label_result.config(text='{0} already exist'.format(value.get()))
 
@@ -154,56 +178,47 @@ class interface:
             NoYes.grid(column=2, row=2)
 
         window_a = tkinter.Tk()
+        window_a.title('New group')
         tkinter.Label(window_a, text="Name of new group").grid(column=0, row=0)
         value = tkinter.Entry(window_a, width=40)
-        value.grid(column=1, row=0)
+        value.grid(column=1, row=0,columnspan=2)
 
-        tkinter.Button(window_a, text="Add", command=new_group).grid(column=0, row=1)
-        tkinter.Button(window_a, text="exit", command=exit_add_group).grid(column=0, row=2)
+        tkinter.Button(window_a, text="Add", command=new_group).grid(column=0, row=2)
+        tkinter.Button(window_a, text="exit", command=exit_add_group, fg="red").grid(column=1, row=2)
 
         label_result = tkinter.Label(window_a, text="")
         label_result.grid(column=1, row=1)
 
     def show_list(self, event):
-        def exit():
-            exitsure = tkinter.Toplevel()
-
-            areyousure = tkinter.Label(exitsure, text="Are you sure you want to exit?")
-            areyousure.grid(column=0, row=0, columnspan=4)
-
-            ExitYes = tkinter.Button(exitsure, text="Yes", fg="red",
-                                     command=lambda: [window_s.destroy(), exitsure.destroy()])
-            ExitYes.grid(column=0, row=2)
-
-            NoYes = tkinter.Button(exitsure, text="No", command=exitsure.destroy)
-            NoYes.grid(column=2, row=2)
 
         window_s = tkinter.Tk()
-        window_s.title("Graphs")
+        window_s.title(self.select_graph.get())
 
         data_from_yaml = yaml_test.get_yaml(self.select_graph.get())
 
-        for key in sorted(data_from_yaml):
-            print(key, data_from_yaml[key].get(self.select_graph.get()), data_from_yaml[key].get('comment'))
-
-
         if data_from_yaml is not None:
-
             my_list = tkinter.Listbox(window_s)
             my_list.grid(column=0, row=0)
 
+            for key in sorted(data_from_yaml):
+                print(key, data_from_yaml[key].get(self.select_graph.get()), data_from_yaml[key].get('comment'))
+                my_list.insert(tkinter.END,"{0}: {1}: {2}; {3}".format(key, self.select_graph.get(),
+                                                           data_from_yaml[key].get(self.select_graph.get()),
+                                                           data_from_yaml[key].get('comment')))
+            """
             for key, value in data_from_yaml.items():
                 my_list.insert(tkinter.END,
                                "{0}: {1}: {2}; {3}".format(key, self.select_graph.get(), value.get(self.select_graph.get()),
                                                            value.get('comment')))
 
+            """
             my_list.config(width=100)
 
         else:
             label_result = tkinter.Label(window_s, text="No data to show")
             label_result.grid(column=0, row=0)
 
-        tkinter.Button(window_s, text="exit", command=exit, fg="red").grid(column=0, row=1)
+        tkinter.Button(window_s, text="exit", command=window_s.destroy, fg="red").grid(column=0, row=1)
         window_s.mainloop()
 
     def updtcblist(self):
@@ -219,3 +234,9 @@ class interface:
             filewin = Toplevel(self)
             button = Button(filewin, text="Do nothing button")
             button.pack()
+
+    def refresh_list(self,event):
+        self.arr = os.listdir("data/")
+        for i in range(len(self.arr)):
+            self.arr[i] = self.arr[i].split('.')[0]
+        self.select_graph.config(value=self.arr)

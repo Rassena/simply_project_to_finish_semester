@@ -16,6 +16,7 @@ import tkinter
 from datetime import date
 from tkinter import ttk
 import yaml_test
+from yaml_test import write
 
 
 
@@ -36,7 +37,69 @@ class kcal_calculator:
             result = 10 * weight_a + 6.25 * height_a - 5 * age_a + switch_sex.get(sex.current())
             result *= switch_activity.get(activity.current())
 
+            result = round(result, 2)
             label_result.config(text='{:.2f} kcal/day'.format(result))
+
+
+        def exit():
+            exitsure = tkinter.Toplevel()
+
+            areyousure = tkinter.Label(exitsure, text="Are you sure you want to exit?")
+            areyousure.grid(column=0, row=0, columnspan=4)
+
+            ExitYes = tkinter.Button(exitsure, text="Yes", fg="red",
+                                     command=lambda: [window.destroy(), exitsure.destroy()])
+            ExitYes.grid(column=0, row=2)
+
+            NoYes = tkinter.Button(exitsure, text="No", command=exitsure.destroy)
+            NoYes.grid(column=2, row=2)
+
+
+        def add():
+
+            newDate = date.today()
+            correctDate = False
+            try:
+                newDate = date(int(year.get()), int(month.get()), int(day.get()))
+                correctDate = True
+            except ValueError:
+                correctDate = False
+
+            if (correctDate):
+                switch_activity = {0: 1.2, 1: 1.375, 2: 1.55, 3: 1.725, 4: 1.9}
+
+                switch_sex = {0: 5, 1: -161}
+
+                height_a = int(height.get())
+                weight_a = int(weight.get()) + int(weight2.get()) / 10
+                age_a = int(age.get())
+
+                result = 10 * weight_a + 6.25 * height_a - 5 * age_a + switch_sex.get(sex.current())
+                result *= switch_activity.get(activity.current())
+                result = round(result, 2)
+
+                user_data = {
+                    'height': height_a,
+                    'weight': weight_a,
+                    'age': age_a,
+                    'activity': activity.current(),
+                    'sex': sex.current(),
+                }
+
+                yaml_test.user(user_data)
+                print(user_data)
+
+                label_result.config(
+                    text='dodano: {2} - {0}: {1}'.format('kcal', result,
+                                                                       date(int(year.get()), int(month.get()),
+                                                                            int(day.get()))))
+                new_yaml_data_dict = {
+                    date(int(year.get()), int(month.get()), int(day.get())): {
+                        'kcal': float(result),
+                        'comment': ''
+                    }
+                }
+                write(new_yaml_data_dict, 'kcal')
 
         window = tkinter.Tk()
         window.title("Daily kcal calculator BMR")
@@ -73,9 +136,6 @@ class kcal_calculator:
         day.grid(column=3, row=0,sticky="w")
         day.current(today.day-1)
         day.bind("<<ComboboxSelected>>", calculate)
-
-
-
 
 
         tkinter.Label(window,text="height (cm):").grid(column=0, row=1)
@@ -156,47 +216,7 @@ class kcal_calculator:
         label_result.grid(column=1, row=6,columnspan=3)
 
 
-
-
-        def calculate_2():
-
-            switch_activity = {0: 1.2,1: 1.375,2: 1.55,3:  1.725,4: 1.9}
-
-            switch_sex = {0: 5,1: -161}
-
-            height_a = int(height.get())
-            weight_a = int(weight.get()) + int(weight2.get())/10
-            age_a = int(age.get())
-
-            result = 10* weight_a + 6.25* height_a - 5*age_a + switch_sex.get(sex.current())
-            result*= switch_activity.get(activity.current())
-
-            label_result.config(text='{:.2f} kcal/day'.format(result))
-
-            user_data = {
-                'height': height_a,
-                'weight': weight_a,
-                'age': age_a,
-                'activity':activity.current(),
-                'sex': sex.current(),
-            }
-            yaml_test.user(user_data)
-            print(user_data)
-
-        def exit():
-            exitsure = tkinter.Toplevel()
-
-            areyousure = tkinter.Label(exitsure, text="Are you sure you want to exit?")
-            areyousure.grid(column=0, row=0, columnspan=4)
-
-            ExitYes = tkinter.Button(exitsure, text="Yes", fg="red",
-                                     command=lambda: [window.destroy(), exitsure.destroy()])
-            ExitYes.grid(column=0, row=2)
-
-            NoYes = tkinter.Button(exitsure, text="No", command=exitsure.destroy)
-            NoYes.grid(column=2, row=2)
-
-        tkinter.Button(window, text="Save and add", command=calculate_2).grid(column=0, row=6)
+        tkinter.Button(window, text="Save and add", command=add).grid(column=0, row=6)
         tkinter.Button(window, text="exit", command=exit, fg="red").grid(column=0, row=7)
 
 
@@ -207,6 +227,8 @@ class kcal_calculator:
         age.set(data_user_y.get('age'))
         activity.current(data_user_y.get('activity'))
         sex.current(data_user_y.get('sex'))
+
+        calculate(self)
 
 
 
